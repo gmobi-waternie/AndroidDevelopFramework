@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Parcelable;
 
 /**
- * 创建快捷方式工具类
+ * Utility to create shortcut.
  */
 /*
  * <uses-permission
@@ -21,7 +21,7 @@ import android.os.Parcelable;
 public class ShortCutUtils {
 
 	/**
-	 * 添加当前应用的桌面快捷方式
+	 * Create a shortcut.
 	 */
 	public static void addShortcut(Context cx, int iconResource) {
 		Intent shortcut = new Intent(
@@ -29,7 +29,6 @@ public class ShortCutUtils {
 		Intent shortcutIntent = cx.getPackageManager()
 				.getLaunchIntentForPackage(cx.getPackageName());
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-		// 获取当前应用名称
 		String title = null;
 		try {
 			final PackageManager pm = cx.getPackageManager();
@@ -39,11 +38,9 @@ public class ShortCutUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// 快捷方式名称
+		// The name of shortcut.
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, title);
-		// 不允许重复创建（不一定有效）
 		shortcut.putExtra("duplicate", false);
-		// 快捷方式的图标
 		Parcelable icon = Intent.ShortcutIconResource.fromContext(cx,
 				iconResource);
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
@@ -51,14 +48,13 @@ public class ShortCutUtils {
 	}
 
 	/**
-	 * 删除当前应用的桌面快捷方式
+	 * Delete shortcut.
 	 * 
 	 * @param cx
 	 */
 	public static void delShortcut(Context cx) {
 		Intent shortcut = new Intent(
 				"com.android.launcher.action.UNINSTALL_SHORTCUT");
-		// 获取当前应用名称
 		String title = null;
 		try {
 			final PackageManager pm = cx.getPackageManager();
@@ -67,7 +63,6 @@ public class ShortCutUtils {
 							PackageManager.GET_META_DATA)).toString();
 		} catch (Exception e) {
 		}
-		// 快捷方式名称
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, title);
 		Intent shortcutIntent = cx.getPackageManager()
 				.getLaunchIntentForPackage(cx.getPackageName());
@@ -76,7 +71,7 @@ public class ShortCutUtils {
 	}
 
 	/**
-	 * 判断当前应用在桌面是否有桌面快捷方式
+	 * Judge if have a shortcut already.
 	 */
 	public static boolean hasShortcut(Context cx) {
 		boolean result = false;

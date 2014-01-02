@@ -15,21 +15,20 @@ import com.charon.framework.R;
 
 
 /**
- * 吐司提示的工具类，能够控制吐司的显示和隐藏
+ * Custom Toast utility, cancel the previous toast when showing a toast.
  */
-@SuppressLint("HandlerLeak")
 public class ToastUtil {
 	public static final int LENGTH_SHORT = 0;
 	public static final int LENGTH_LONG = 1;
 	private static View mToastView;
-	private WindowManager mWindowManager;
-	private static int mDuration;
+	private static WindowManager mWindowManager;
+	private static int sDuration;
 
-	private final int WHAT = 100;
-	private static View oldView;
+	private final static int WHAT = 100;
+	private static View mOldView;
 
 	/**
-	 * Android原生Toast，使用此对象来获取当前Toast提示的位置
+	 * Use this to get the location of the toast.
 	 */
 	private static Toast mToast;
 	private static TextView mTextView;
@@ -37,7 +36,7 @@ public class ToastUtil {
 
 	private static ToastUtil instance = null;
 
-	private Handler toastHandler = new Handler() {
+	private static Handler toastHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -47,9 +46,7 @@ public class ToastUtil {
 			if (WHAT == id) {
 				cancelCurrentAlert();
 			}
-
 		}
-
 	};
 
 	@SuppressLint("ShowToast")
@@ -89,7 +86,7 @@ public class ToastUtil {
 	public static ToastUtil makeText(Context context, CharSequence text,
 			int duration) {
 		ToastUtil util = getInstance(context);
-		mDuration = duration;
+		sDuration = duration;
 		mToast.setText(text);
 		mTextView.setText(text);
 		return util;
@@ -97,18 +94,18 @@ public class ToastUtil {
 
 	public static ToastUtil makeText(Context context, int resId, int duration) {
 		ToastUtil util = getInstance(context);
-		mDuration = duration;
+		sDuration = duration;
 		mToast.setText(resId);
 		mTextView.setText(context.getResources().getString(resId));
 		return util;
 	}
 
 	/**
-	 * 进行Toast显示，在显示之前会取消当前已经存在的Toast
+	 * Show the toast with specified time
 	 */
 	public void show() {
 		long time = 0;
-		switch (mDuration) {
+		switch (sDuration) {
 		case LENGTH_SHORT:
 			time = 2000;
 			break;
@@ -120,23 +117,23 @@ public class ToastUtil {
 			break;
 		}
 
-		// 在显示一个Toast之前，先取消上一个Toast的显示
+		// cancel the previous toast
 		cancelOldAlert();
 		toastHandler.removeMessages(WHAT);
 		mLayoutParams.y = mToast.getYOffset();
 		mWindowManager.addView(mToastView, mLayoutParams);
 
-		oldView = mToastView;
+		mOldView = mToastView;
 		toastHandler.sendEmptyMessageDelayed(WHAT, time);
 	}
 
-	private void cancelOldAlert() {
-		if (oldView != null && oldView.getParent() != null) {
-			mWindowManager.removeView(oldView);
+	private static void cancelOldAlert() {
+		if (mOldView != null && mOldView.getParent() != null) {
+			mWindowManager.removeView(mOldView);
 		}
 	}
 
-	public void cancelCurrentAlert() {
+	public static void cancelCurrentAlert() {
 		if (mToastView != null && mToastView.getParent() != null) {
 			mWindowManager.removeView(mToastView);
 		}

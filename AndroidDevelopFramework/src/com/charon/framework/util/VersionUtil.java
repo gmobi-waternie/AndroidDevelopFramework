@@ -5,16 +5,16 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 /**
- * 获取程序版本以及版本比对的工具类
+ * Get the version and check update.
  */
 public class VersionUtil {
 
 	/**
-	 * 获取当前程序的版本
+	 * Get the current version name.
 	 * 
 	 * @param context
 	 *            Context
-	 * @return 版本号，如果出现异常的时候会返回空字符串
+	 * @return will return "" if exception occured.
 	 */
 	public static String getVersionName(Context context) {
 		try {
