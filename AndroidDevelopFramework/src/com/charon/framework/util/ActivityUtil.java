@@ -14,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -34,18 +35,15 @@ public final class ActivityUtil {
 	 *            设置为true则全屏，否则非全屏
 	 */
 	public static void toggleFullScreen(Activity activity, boolean isFull) {
-		hideTitleBar(activity);
 		Window window = activity.getWindow();
-		WindowManager.LayoutParams params = window.getAttributes();
+		WindowManager.LayoutParams winParams = window.getAttributes();
+		final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
 		if (isFull) {
-			params.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-			window.setAttributes(params);
-			window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			winParams.flags |= bits;
 		} else {
-			params.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			window.setAttributes(params);
-			window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			winParams.flags &= ~bits;
 		}
+		window.setAttributes(winParams);
 	}
 
 	/**
@@ -58,13 +56,16 @@ public final class ActivityUtil {
 		toggleFullScreen(activity, true);
 	}
 
+	public static boolean isLandScape(Context context) {
+		return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+	}
+
 	/**
 	 * 获取系统状态栏高度
 	 * 
 	 * @param activity
 	 *            Activity
 	 * @return 状态栏高度
-	 * 
 	 */
 	public static int getStatusBarHeight(Activity activity) {
 		try {
@@ -137,7 +138,6 @@ public final class ActivityUtil {
 	 *            上下文对象，一般为Activity
 	 * @param focusingView
 	 *            输入法所在焦点的View
-	 * 
 	 */
 	public static void closeSoftInput(Context context, View focusingView) {
 		InputMethodManager imm = (InputMethodManager) context

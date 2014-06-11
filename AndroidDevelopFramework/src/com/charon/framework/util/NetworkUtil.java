@@ -8,17 +8,34 @@ import android.net.wifi.WifiManager;
 /**
  * 网络连接的一些工具类
  */
-public class NetUtil {
+public class NetworkUtil {
 
 	/**
 	 * 判断当前网络是否可用
 	 */
-	public static boolean isNetAvailable(Context context) {
+	public static boolean isNetworkAvailable(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isAvailable();
+	}
+
+	/**
+	 * 判断当前网络是否是手机网络
+	 * 
+	 * @param context
+	 * @return boolean
+	 */
+	public static boolean isMobile(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+		if (activeNetInfo != null
+				&& activeNetInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
