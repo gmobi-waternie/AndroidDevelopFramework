@@ -1,6 +1,5 @@
 package com.charon.framework;
 
-import android.annotation.SuppressLint;
 import android.os.Handler;
 
 /**
