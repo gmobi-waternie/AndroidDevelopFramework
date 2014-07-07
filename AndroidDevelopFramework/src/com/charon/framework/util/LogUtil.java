@@ -10,7 +10,7 @@ public class LogUtil {
     /**
      * If print log here.
      */
-    private static int LOG_LEVEL = 6;
+    private static int LOG_LEVEL = 1;
 
     private static final int VERBOSE = 5;
     private static final int DEBUG = 4;
